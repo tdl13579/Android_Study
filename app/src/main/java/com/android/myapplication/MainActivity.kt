@@ -1,13 +1,49 @@
 package com.android.myapplication
 
-import androidx.appcompat.app.AppCompatActivity
+import android.icu.text.SimpleDateFormat
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.myapplication.databinding.ActivityMainBinding
+import com.android.myapplication.model.MainData
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var mainAdapter: MainAdapter
+    private var data: ArrayList<MainData> = arrayListOf()
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        Toast.makeText(this,"hello world", Toast.LENGTH_SHORT).show()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        Toast.makeText(this, "hello world", Toast.LENGTH_SHORT).show()
+        val date = SimpleDateFormat("YYYY-MM-DD  hh:mm:ss").format(Date().time)
+        // 构造数据
+        for (i in 1..20) {
+            var mainData =
+                MainData(R.drawable.ic_launcher_foreground, "标题--$i", "副标题--$i", "$date -- $i")
+            data.add(mainData)
+        }
+        // 创建适配器
+        var linearLayoutManager = LinearLayoutManager(this)
+        binding.recycleView.layoutManager = linearLayoutManager
+        mainAdapter = MainAdapter(this, data)
+        mainAdapter.setOnItemClickListener(object :MainAdapter.ItemOnClickListener{
+            override fun onClick(position: Int) {
+                Toast.makeText(this@MainActivity,data[position].title,Toast.LENGTH_SHORT).show()
+            }
+        })
+        binding.recycleView.adapter = mainAdapter
+
+        // 子线程中开启主线程
+        Thread {
+            runOnUiThread(){
+                println("hello world")
+            }
+        }.start()
     }
 }
