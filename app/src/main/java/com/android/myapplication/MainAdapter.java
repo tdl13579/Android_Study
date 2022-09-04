@@ -1,5 +1,6 @@
 package com.android.myapplication;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.HolderView> implements View.OnClickListener {
     private Context context;
     private ArrayList<MainData> data;
-    private setItemOnClickListener mItemOnClickListener;
+    private ItemOnClickListener OnItemClickListener;
     public MainAdapter(Context context, ArrayList<MainData> data) {
         this.context = context;
         this.data = data;
@@ -30,12 +31,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.HolderView> im
 
     }
     // 定义一个接口方法用来绑定事件
-    public void setmItemOnClickListener(setItemOnClickListener mItemOnClickListener) {
-        this.mItemOnClickListener = mItemOnClickListener;
+    public void setOnItemClickListener(ItemOnClickListener OnItemClickListener) {
+        this.OnItemClickListener = OnItemClickListener;
     }
 
     // 定义点击事件的接口
-    public interface setItemOnClickListener {
+    public interface ItemOnClickListener {
         void onClick(int position);
     }
 
@@ -50,13 +51,20 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.HolderView> im
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HolderView holder, int position) {
+    public void onBindViewHolder(@NonNull HolderView holder, @SuppressLint("RecyclerView") int position) {
         MainData mainData = data.get(position);
         holder.imageView.setImageResource(R.drawable.ic_launcher_foreground);
         holder.title.setText(mainData.getTitle());
         holder.subTitle.setText(mainData.getSubTitle());
         holder.subTitleTwo.setText(mainData.getSubTitleTwo());
-        holder.itemView.setOnClickListener(view -> mItemOnClickListener.onClick(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(OnItemClickListener !=null){
+                    OnItemClickListener.onClick(position);
+                }
+            }
+        });
     }
 
 

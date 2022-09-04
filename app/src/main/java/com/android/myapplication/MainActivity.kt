@@ -2,15 +2,14 @@ package com.android.myapplication
 
 import android.icu.text.SimpleDateFormat
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.myapplication.databinding.ActivityMainBinding
 import com.android.myapplication.model.MainData
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -33,13 +32,18 @@ class MainActivity : AppCompatActivity() {
         var linearLayoutManager = LinearLayoutManager(this)
         binding.recycleView.layoutManager = linearLayoutManager
         mainAdapter = MainAdapter(this, data)
-        mainAdapter.setmItemOnClickListener(object :MainAdapter.setItemOnClickListener{
+        mainAdapter.setOnItemClickListener(object :MainAdapter.ItemOnClickListener{
             override fun onClick(position: Int) {
                 Toast.makeText(this@MainActivity,data[position].title,Toast.LENGTH_SHORT).show()
             }
         })
         binding.recycleView.adapter = mainAdapter
 
-
+        // 子线程中开启主线程
+        Thread {
+            runOnUiThread(){
+                println("hello world")
+            }
+        }.start()
     }
 }
