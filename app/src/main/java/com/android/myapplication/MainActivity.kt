@@ -45,6 +45,5 @@ class MainActivity : AppCompatActivity() {
                 println("hello world")
             }
         }.start()
-
     }
 }
