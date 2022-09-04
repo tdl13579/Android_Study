@@ -4,24 +4,24 @@ import android.content.IntentFilter
 import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.myapplication.databinding.ActivityMainBinding
 import com.android.myapplication.model.MainData
 import com.android.myapplication.model.MyFragment
 import com.android.myapplication.model.MyReceiver
-import okhttp3.Interceptor
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainAdapter: MainAdapter
     private var data: ArrayList<MainData> = arrayListOf()
-    private lateinit var  myReceiver: MyReceiver
-    private lateinit var  myFragment: MyFragment
+    private lateinit var myReceiver: MyReceiver
+    private lateinit var myFragment: MyFragment
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,29 +37,29 @@ class MainActivity : AppCompatActivity() {
         }
         // 动态加载广播
         myReceiver = MyReceiver()
-        var intentFilter =  IntentFilter()
+        var intentFilter = IntentFilter()
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
-        registerReceiver(myReceiver,intentFilter)
+        registerReceiver(myReceiver, intentFilter)
 
         // 加载动态fragment
         myFragment = MyFragment();
-        supportFragmentManager.beginTransaction().replace(R.id.fragment,myFragment).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fragment, myFragment).commit()
 
 
         // 创建适配器
         var linearLayoutManager = LinearLayoutManager(this)
         binding.recycleView.layoutManager = linearLayoutManager
         mainAdapter = MainAdapter(this, data)
-        mainAdapter.setOnItemClickListener(object :MainAdapter.ItemOnClickListener{
+        mainAdapter.setOnItemClickListener(object : MainAdapter.ItemOnClickListener {
             override fun onClick(position: Int) {
-                Toast.makeText(this@MainActivity,data[position].title,Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, data[position].title, Toast.LENGTH_SHORT).show()
             }
         })
         binding.recycleView.adapter = mainAdapter
 
         // 子线程中开启主线程
         Thread {
-            runOnUiThread(){
+            runOnUiThread() {
                 println("hello world")
             }
         }.start()
@@ -68,5 +68,19 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(myReceiver) // 取消广播
+    }
+
+    // 文件的读写方法
+    // output 是写入
+    private fun save(file: String, text: String) {
+        var fileOutputStream = openFileOutput(file, MODE_PRIVATE);
+        fileOutputStream.write(text.toByteArray())
+    }
+    // input 是读取
+    private fun read(file: String){
+        var fileInputStream = openFileInput(file)
+        val temp = ByteArray(1024)
+        var hasRead =  fileInputStream.read(temp)
+        Log.e("read",String(temp,0,hasRead))
     }
 }

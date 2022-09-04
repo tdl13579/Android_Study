@@ -9,6 +9,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Time;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,6 +44,7 @@ public class AsyncActivity extends AppCompatActivity {
                 handler.sendMessage(msg);
             }
         }.start();
+
     }
 
     private void showToast(String str) {
