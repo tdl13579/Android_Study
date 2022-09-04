@@ -1,4 +1,4 @@
-package com.android.myapplication.model;
+package com.android.myapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +28,7 @@ public class OkhttpRequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityOkhttpRequestBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        getActionBar().hide(); // 代码隐藏ActionBar
         // get同步
         binding.getSync.setOnClickListener(view -> {
             new Thread(new Runnable() {
