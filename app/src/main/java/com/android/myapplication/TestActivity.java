@@ -1,5 +1,6 @@
 package com.android.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,9 +13,18 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class TestActivity extends AppCompatActivity {
     TextView leftButton;
     Context context;
+    String Tag = "TestActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +143,32 @@ public class TestActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.e("onStart", "---");
+        // 同步get请求
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                // 请求参数和响应参数
+                Request request = new Request.Builder()
+                        .url("https:www.baidu.com")
+                        .build();
+                Call call =  new OkHttpClient().newCall(request);
+                try {
+                    call.execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    Response response = call.execute();
+                    if(response.isSuccessful()){
+                        Log.e(Tag,response.body().toString());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+        //
     }
 
     @Override
