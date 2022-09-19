@@ -2,7 +2,7 @@ package com.android.myapplication.kotlinStudy
 
 class User():A{
     override fun hello(): String {
-        return super.hello()
+        return  "重写hello方法"
     }
 }
 fun User.Hello(string: String):String{
@@ -36,6 +36,7 @@ fun main(){
     println(User().Hello("hello ")) // hello world
     var s = "hello---"
     println( s.hello()) // hello
+    println( User().hello()) // 重写hello方法
     // 接口实现
     fun sum(a:Int,b:Int){
         a+b
@@ -54,6 +55,6 @@ class Student constructor(name:String){
         println("$name--$age")
     }
     companion object {
-        
+
     }
 }
