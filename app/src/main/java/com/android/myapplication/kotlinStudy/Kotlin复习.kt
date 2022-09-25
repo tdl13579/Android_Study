@@ -1,6 +1,11 @@
 package com.android.myapplication.kotlinStudy
 
 data class Stu(val name: String = "", val age: Int = 0)
+class Stu2(var name: String,var age: Int){
+    operator fun component1() = name // 需要这样声明才可以用作结构赋值
+    operator fun component2() = age
+}
+
 enum class Color {
     RED, BLACK, BLUE, GREEN, WHITE
 }
@@ -42,7 +47,10 @@ fun main() {
     println(Color.valueOf("RED")) // RED
     println(color.name) // BLUE
     println(color.ordinal) // 2
-
+    var (x,y) = Stu("Mike",2) //数据类直接解构赋值
+    var (m,n) = Stu2("Jerry",3) // 不是数据类不支持直接解构复制，需要用component1,2 这样按顺序来声明
+    println("$x--$y") // Mike--2
+    println("$m--$n") // Jerry--3
 
 
 }
