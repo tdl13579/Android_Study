@@ -13,7 +13,10 @@ import com.android.myapplication.databinding.ActivityMainBinding
 import com.android.myapplication.model.MainData
 import com.android.myapplication.model.MyFragment
 import com.android.myapplication.model.MyReceiver
+import okhttp3.*
+import java.io.IOException
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -76,11 +79,84 @@ class MainActivity : AppCompatActivity() {
         var fileOutputStream = openFileOutput(file, MODE_PRIVATE);
         fileOutputStream.write(text.toByteArray())
     }
+
     // input 是读取
-    private fun read(file: String){
+    private fun read(file: String) {
         var fileInputStream = openFileInput(file)
         val temp = ByteArray(1024)
-        var hasRead =  fileInputStream.read(temp)
-        Log.e("read",String(temp,0,hasRead))
+        var hasRead = fileInputStream.read(temp)
+        Log.e("read", String(temp, 0, hasRead))
     }
+
+    // 同步get请求
+    fun getAsync() {
+        Thread {
+            var request = Request.Builder()
+                .get()
+                .url("www.baidu.com")
+                .build()
+            var response = OkHttpClient().newCall(request).execute()
+            if (response.isSuccessful) {
+                Log.e("get同步", "${response.body.toString()}")
+            }
+        }.start()
+    }
+
+    fun get() {
+        var request = Request.Builder()
+            .get().url("www.baidu.com").build()
+        OkHttpClient().newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    Log.e("get异步", "${response.body.toString()}")
+                }
+            }
+        })
+    }
+
+    fun postAsync() {
+        Thread {
+            var requestArgs = FormBody.Builder()
+                .add("a", "1")
+                .add("b", "2")
+                .build()
+            var request = Request.Builder()
+                .post(requestArgs)
+                .url("www.baidu.com")
+                .build()
+            var response = OkHttpClient().newCall(request)
+                .execute()
+            if (response.isSuccessful) {
+                Log.e("post同步", "${response.body.toString()}")
+            }
+        }.start()
+    }
+
+    fun post() {
+        var requestArgs = FormBody.Builder()
+            .add("a", "1")
+            .add("b", "2")
+            .build()
+        var request = Request.Builder()
+            .post(requestArgs)
+            .url("www.baidu.com")
+            .build()
+        OkHttpClient().newCall(request)
+            .enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.isSuccessful) {
+                        Log.e("post异步", "${response.body.toString()}")
+                    }
+                }
+            })
+    }
+
 }
