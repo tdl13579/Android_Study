@@ -1,5 +1,6 @@
 package com.android.myapplication
 
+import android.content.Intent
 import android.content.IntentFilter
 import android.icu.text.SimpleDateFormat
 import android.os.Build
@@ -66,6 +67,11 @@ class MainActivity : AppCompatActivity() {
                 println("hello world")
             }
         }.start()
+        // 去登录
+        binding.goLogin.setOnClickListener{
+            var intent = Intent(this,LoginActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onDestroy() {
