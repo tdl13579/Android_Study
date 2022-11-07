@@ -5,6 +5,13 @@ class Stu2(var name: String,var age: Int){
     operator fun component1() = name // 需要这样声明才可以用作结构赋值
     operator fun component2() = age
 }
+// 泛型
+class Box<T>(item:T){
+    private var name: T = item
+    fun fetch():T{
+        return name
+    }
+}
 // 密封类
 sealed class Bar
 class Test(var name: String) : Bar()
@@ -55,6 +62,13 @@ fun main() {
      * 数字：Byte(8--(-128,127)) Short(16) Int(32) Long(64) 浮点数：Float(32) Double(64)
      * 字符：Char (不能直接当做数字用 'a' 表示) 布尔： true/false  数组：Array 字符串：String
      * */
+    // 泛型函数
+    fun <T> foo (item: T):T{
+        return item
+    }
+    println(foo("foo")) // foo
+    println(foo(1)) // 1
+
     for (item in 1..9 step 2) {
         print(item) // 13579
     }
@@ -78,7 +92,11 @@ fun main() {
     println("$olderJack -- $jack") // Stu(name=Jack, age=2) -- Stu(name=Jack, age=1)
     var (name, age) = olderJack
     println("$name -- $age") // Jack -- 2
-
+    var box1:Box<Stu> = Box<Stu>(jack)
+    var box2 = Box<String>("hello")
+    println("$box1 -- $box2")
+    println(box1.fetch().name) // jack
+    println(box2.fetch()) // hello
 
     var color: Color = Color.BLUE
 
